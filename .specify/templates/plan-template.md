@@ -31,7 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Accuracy & Verifiability**: All factual claims are backed by credible sources.
+- [ ] **Clarity & Readability**: Content is clear, well-structured, and uses proper language.
+- [ ] **Modular & Maintainable Structure**: The book is organized into modular, independently maintainable files.
+- [ ] **Reusability & Documentation of Process**: All prompts, decisions, and metadata are recorded.
+- [ ] **Consistency & Style Guidelines**: The book adheres to a consistent style guide.
+- [ ] **Quality Assurance & Review Process**: All AI-generated content is reviewed by a human.
+- [ ] **Deployment & Build Standards**: The site is built with Docusaurus and deployed automatically.
+- [ ] **Project Governance & Versioning**: The project follows semantic versioning and a documented amendment process.
 
 ## Project Structure
 
