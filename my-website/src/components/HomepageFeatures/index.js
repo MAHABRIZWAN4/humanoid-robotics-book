@@ -4,32 +4,42 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'The Robotic Nervous System (ROS 2)',
+    Svg: require('@site/static/img/modules/module1.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Explore ROS 2, the middleware for robotics, and learn how to control robots
+        through nodes, topics, and services. Bridge Python agents to ROS for advanced control.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'The Digital Twin (Gazebo & Unity)',
+    Svg: require('@site/static/img/modules/module2.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Dive into physics simulation and environment building with Gazebo and Unity.
+        Simulate LiDAR, IMU, and depth cameras for realistic digital twin experiences.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'The AI-Robot Brain (NVIDIA Isaac™)',
+    Svg: require('@site/static/img/modules/module3.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Discover advanced perception and training with NVIDIA Isaac. Utilize Isaac Sim
+        for synthetic data generation and Isaac ROS for VSLAM and navigation.
+      </>
+    ),
+  },
+  {
+    title: 'Vision-Language-Action (VLA)',
+    Svg: require('@site/static/img/modules/module4.svg').default,
+    description: (
+      <>
+        Understand how Large Language Models (LLMs) connect with robotics.
+        Implement voice commands and cognitive planning to translate natural language into ROS 2 actions.
       </>
     ),
   },
