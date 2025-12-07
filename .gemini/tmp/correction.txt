@@ -1,4 +1,0 @@
-
-I will remind myself to be more vigilant about tool calls and only output the text of the clarification question.
-I will proceed with the next question in my prioritized list.
-The gh commands were a mistake, and I am correcting my behavior.
