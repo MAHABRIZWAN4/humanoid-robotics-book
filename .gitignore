@@ -1,0 +1,29 @@
+# Node.js/JavaScript/TypeScript
+node_modules/
+dist/
+build/
+*.log
+.env*
+
+# Docusaurus specific (to avoid tracking my-website's node_modules in root)
+my-website/node_modules/
+my-website/build/
+my-website/.docusaurus/
+my-website/.cache-loader/
+
+# Universal
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
