@@ -34,7 +34,7 @@
 - [X] T010 Create `my_backend_project/backend/rag/chunker.py` for text chunking logic.
 - [X] T011 Create `my_backend_project/backend/rag/embeddings.py` for Cohere embedding generation.
 - [X] T012 Create `my_backend_project/backend/rag/retriever.py` for Qdrant similarity search.
-- [X] T013 Create `my_backend_project/backend/rag/agent.py` for OpenAI Agent logic.
+- [X] T013 Create `my_backend_project/backend/rag/agent.py` for Gemini Agent logic with Guardrails and Multilingual Response.
 - [X] T014 Create `my_backend_project/scripts/ingest_book.py` as a one-time script for embedding ingestion.
 - [X] T015 Implement content loading, cleaning, and chunking in `my_backend_project/scripts/ingest_book.py` using `my_website/docs/` as the source.
 - [X] T016 Implement embedding generation using `my_backend_project/backend/rag/embeddings.py` and Qdrant storage using `my_backend_project/backend/rag/retriever.py` within `my_backend_project/scripts/ingest_book.py`.
