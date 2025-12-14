@@ -9,30 +9,27 @@
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
+---
+
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic backend/database structure.
+**Purpose**: Initialize the backend API project.
 
 - [ ] T001 Initialize FastAPI project structure in `my-website/src/api/`.
-- [ ] T002 [P] Configure linting and formatting for the new `my-website/src/api/` directory.
-- [ ] T003 [P] Define database table schemas (Users, ChatSession, Message, Feedback) in `my-website/src/api/models.py`.
-- [ ] T004 [P] Create a utility module to handle the connection to Qdrant cloud in `my-website/src/api/qdrant_utils.py`.
-- [ ] T005 [P] Create a utility module to handle the connection to Neon Postgres in `my-website/src/api/db_utils.py`.
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Processing the book content into a queryable knowledge base.
+**Purpose**: Process the book content into a queryable knowledge base. This entire phase must be complete before any user story work can begin.
 
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete.
-
-- [ ] T006 Create a content processing script in `scripts/prepare_content.js`.
-- [ ] T007 Implement logic in `scripts/prepare_content.js` to gather all MD/MDX files from `my-website/docs/`.
-- [ ] T008 Implement text chunking logic within `scripts/prepare_content.js`.
-- [ ] T009 Implement embedding generation using Cohere API within `scripts/prepare_content.js`.
-- [ ] T010 Implement logic to connect to Qdrant and store the generated embeddings and metadata in `scripts/prepare_content.js`.
-- [ ] T011 Execute the `scripts/prepare_content.js` script to process and populate the entire book's content into the vector database.
+- [ ] T002 [P] Create a content processing script in `scripts/prepare_content.js`.
+- [ ] T003 Implement logic in `scripts/prepare_content.js` to extract and clean content from all MD/MDX files in `my-website/docs/`.
+- [ ] T004 Implement text chunking logic (500-1000 tokens) in `scripts/prepare_content.js`.
+- [ ] T005 [P] Implement Cohere embedding generation for text chunks in `scripts/prepare_content.js`.
+- [ ] T006 [P] Implement Qdrant connection and setup logic in `scripts/prepare_content.js` to create the collection.
+- [ ] T007 Implement logic in `scripts/prepare_content.js` to insert the generated vectors and metadata into Qdrant.
+- [ ] T008 Execute the `scripts/prepare_content.js` script to fully populate the vector database.
 
 **Checkpoint**: Foundation ready. The vector database is populated with the textbook's content.
 
@@ -40,56 +37,45 @@
 
 ## Phase 3: User Story 1 - Focused Question Answering (Priority: P1) 🎯 MVP
 
-**Goal**: A user can select text from the book and ask a question about it.
+**Goal**: A user can select text and ask a question about it to get a concise, context-aware answer.
+**Independent Test**: Can be tested by selecting a paragraph, asking a question, and verifying a relevant summary answer is returned.
 
-**Independent Test**: Can be tested by selecting any paragraph, asking a question via the UI, and verifying that a relevant answer is returned from the backend.
+- [ ] T009 [P] [US1] Create the `/query` endpoint in `my-website/src/api/main.py` to accept a question and optional selected text.
+- [ ] T010 [US1] Implement Qdrant similarity search in the `/query` endpoint to retrieve relevant document chunks.
+- [ ] T011 [US1] Create an LLM service module in `my-website/src/api/llm_service.py` for RAG orchestration.
+- [ ] T012 [US1] Implement logic in `llm_service.py` to combine the user query with retrieved chunks and generate a concise summary answer.
+- [ ] T013 [US1] Integrate the `llm_service.py` into the `/query` endpoint.
+- [ ] T014 [P] [US1] Create the floating chat button and panel UI component in `my-website/src/theme/Chatbot/index.js`.
+- [ ] T015 [P] [US1] Style the Chatbot UI using CSS in `my-website/src/theme/Chatbot/styles.module.css`.
+- [ ] T016 [US1] Implement frontend logic to capture selected text from the document and pass it to the Chatbot component.
+- [ ] T017 [US1] Implement the API call from the Chatbot component to the `/query` endpoint.
+- [ ] T018 [US1] Implement logic in the Chatbot component to display the summary answer and a "Show more" button.
 
-### Implementation for User Story 1
-
-- [ ] T012 [US1] Create the `/query` endpoint in `my-website/src/api/main.py` to receive a question and optional selected text.
-- [ ] T013 [US1] Implement similarity search logic in the `/query` endpoint using `my-website/src/api/qdrant_utils.py` to find relevant chunks.
-- [ ] T014 [US1] Create a new service module `my-website/src/api/llm_service.py` to handle interaction with the OpenAI/ChatKit SDK.
-- [ ] T015 [US1] Integrate the `llm_service` into the `/query` endpoint to generate an answer from the retrieved chunks.
-- [ ] T016 [US1] Implement logic in the `/query` endpoint to save the user's query and the chatbot's response to the Postgres database.
-- [ ] T017 [P] [US1] Create the basic Chatbot UI as a new React component in `my-website/src/theme/Chatbot/index.js`.
-- [ ] T018 [P] [US1] Style the Chatbot UI using CSS in `my-website/src/theme/Chatbot/styles.module.css`.
-- [ ] T019 [US1] Implement frontend logic in the Docusaurus site to capture selected text.
-- [ ] T020 [US1] Implement the API call from the `Chatbot/index.js` component to the `/query` endpoint, sending the question and any selected text.
-- [ ] T021 [US1] Implement logic to display the streaming response from the API in the Chatbot UI.
-
-**Checkpoint**: User Story 1 is fully functional and testable. A user can get answers to questions about selected text.
+**Checkpoint**: User Story 1 is fully functional. A user can get summary answers to questions about selected text.
 
 ---
 
 ## Phase 4: User Story 2 - General Knowledge-Base Query (Priority: P2)
 
-**Goal**: A user can ask a general question without selecting text and get a cited answer.
+**Goal**: A user can ask a general question and get a cited, detailed answer.
+**Independent Test**: Ask a general question and click "Show more" to verify a correct, cited answer is returned.
 
-**Independent Test**: Can be tested by opening the chatbot, asking a question on a topic covered in the book, and verifying an accurate, cited answer is returned.
+- [ ] T019 [US2] Ensure the Chatbot UI in `my-website/src/theme/Chatbot/index.js` allows submitting questions when no text is selected.
+- [ ] T020 [US2] Update the `llm_service.py` to include source citations (chapter/section) in the full, detailed response.
+- [ ] T021 [US2] Update the Chatbot component to display the detailed answer and citations when "Show more" is clicked.
 
-### Implementation for User Story 2
-
-- [ ] T022 [US2] Update the Chatbot UI in `my-website/src/theme/Chatbot/index.js` to ensure the input field is active and can send queries even when no text is selected.
-- [ ] T023 [US2] Verify the `/query` endpoint in `my-website/src/api/main.py` correctly handles requests where the selected text context is empty.
-- [ ] T024 [US2] Update the `my-website/src/api/llm_service.py` to include source citations (e.g., chapter, section) in the generated answer.
-- [ ] T025 [US2] Update the Chatbot UI in `my-website/src/theme/Chatbot/index.js` to parse and display the source citations alongside the answer.
-
-**Checkpoint**: User Stories 1 and 2 are functional. The chatbot can handle both contextual and general queries.
+**Checkpoint**: User Stories 1 & 2 are functional. The chatbot handles both contextual and general queries with detailed answers.
 
 ---
 
 ## Phase 5: User Story 3 - Review Chat History (Priority: P3)
 
-**Goal**: A user can view their past conversations with the chatbot.
+**Goal**: A user can view their past conversations, which are persisted in the browser's local storage.
+**Independent Test**: Have a conversation, reload the page, and verify the conversation is still present in the chat history view.
 
-**Independent Test**: Have a conversation, close and reopen the chatbot, navigate to the history section, and verify the previous conversation is listed and viewable.
-
-### Implementation for User Story 3
-
-- [ ] T026 [P] [US3] Create the `/history` endpoint in `my-website/src/api/main.py` that fetches a user's past chat sessions from the Postgres database.
-- [ ] T027 [P] [US3] Create a "History" view or component within `my-website/src/theme/Chatbot/index.js`.
-- [ ] T028 [US3] Implement frontend logic in the history component to call the `/history` endpoint and display the list of past conversations.
-- [ ] T029 [US3] Implement frontend logic to select a conversation from the history and display its messages.
+- [ ] T022 [P] [US3] Implement logic in `my-website/src/theme/Chatbot/index.js` to save the message history to local storage after each interaction.
+- [ ] T023 [US3] Implement logic in the Chatbot component to load and restore chat history from local storage when it mounts.
+- [ ] T024 [P] [US3] Create a "History" view or tab within the Chatbot component to display past conversations.
 
 **Checkpoint**: All user stories are now independently functional.
 
@@ -99,9 +85,9 @@
 
 **Purpose**: Final improvements and production readiness.
 
-- [ ] T030 [P] Create the `/feedback` endpoint in `my-website/src/api/main.py` to store user ratings/comments in the Postgres database.
-- [ ] T031 [P] Implement a feedback UI (e.g., thumbs up/down buttons) on chat messages in `my-website/src/theme/Chatbot/index.js`.
-- [ ] T032 Add end-to-end tests covering the full flow from UI to all backend services.
-- [ ] T033 [P] Add API documentation for the `/query`, `/history`, and `/feedback` endpoints.
-- [ ] T034 Configure all necessary environment variables and secrets for Vercel deployment.
-- [ ] T035 Deploy the feature and monitor system health and response quality.
+- [ ] T025 [P] Add a user feedback mechanism (e.g., thumbs up/down) to the Chatbot UI in `my-website/src/theme/Chatbot/index.js`.
+- [ ] T026 [P] Add a "Clear History" button to the UI in `my-website/src/theme/Chatbot/index.js`.
+- [ ] T027 Perform functional testing for both general and selected-text queries.
+- [ ] T028 [P] Measure response latency and perform basic performance testing.
+- [ ] T029 Prepare all environment variables and secrets for Vercel deployment.
+- [ ] T030 Deploy the updated Docusaurus site with the embedded chatbot and backend API to Vercel.
