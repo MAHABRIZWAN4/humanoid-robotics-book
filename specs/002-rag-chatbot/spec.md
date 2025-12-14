@@ -5,6 +5,15 @@
 **Status**: Draft
 **Input**: User description: "Integrated RAG Chatbot for Physical AI & Humanoid Robotics Textbook..."
 
+## Clarifications
+
+### Session 2025-12-14
+- Q: Should user accounts be required to use the chatbot, or should we allow anonymous sessions? → A: Allow anonymous chats: No login required. Chat history is stored in the browser's local storage.
+- Q: When a user selects text, how should the chatbot use that context? → A: Use selected text + book (Combined Context).
+- Q: How long should the chat history be stored for anonymous users? → A: Persistent until cleared (Indefinitely).
+- Q: How should the chatbot UI be presented to the user? → A: Floating button always visible.
+- Q: What should be the default style and format for the chatbot's answers? → A: Concise summary with "Show more" option.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Focused Question Answering (Priority: P1)
@@ -17,8 +26,8 @@ A student is reading a complex section of the textbook and needs clarification. 
 
 **Acceptance Scenarios**:
 
-1.  **Given** a user is viewing a page in the textbook, **When** they select a paragraph of text and ask a question related to it, **Then** the chatbot returns an answer derived from the selected text.
-2.  **Given** a user has asked a question about selected text, **When** the chatbot responds, **Then** the response is concise and directly related to the query and context.
+1.  **Given** a user is viewing a page in the textbook, **When** they select a paragraph of text and ask a question related to it, **Then** the chatbot returns an answer primarily based on the selected text, augmented by other highly relevant passages from the full knowledge base.
+2.  **Given** a user has asked a question about selected text, **When** the chatbot responds, **Then** the response is concise and directly related to the query and combined context.
 
 ---
 
@@ -62,20 +71,21 @@ A user wants to review a question they asked last week. They open the chatbot an
 
 ### Functional Requirements
 
--   **FR-001**: The system MUST provide a chat interface embedded within the book's website.
+-   **FR-001**: The system MUST provide a chat interface accessible via a floating button visible on all pages of the book's website.
 -   **FR-002**: The system MUST allow users to submit questions in natural language through a text input.
 -   **FR-003**: The system MUST allow users to select text within the book's content to use as context for a query.
 -   **FR-004**: The system MUST process the book's content into a structured internal knowledge base suitable for querying.
--   **FR-005**: The system MUST analyze user questions (with or without selected text context) to retrieve relevant information from the knowledge base.
--   **FR-006**: The system MUST generate a concise and relevant natural language answer based on the retrieved information.
+-   **FR-005**: The system MUST analyze user questions (with or without selected text context), using selected text to prioritize retrieval from the full knowledge base.
+-   **FR-006**: The system MUST generate a concise summary as the default answer, with an option to expand for a more detailed response and citations.
 -   **FR-007**: The system MUST be capable of providing references to the source of the information within the book.
--   **FR-008**: The system MUST persist a user's chat history.
+-   **FR-008**: The system MUST persist a user's chat history on the client-side indefinitely (e.g., in browser local storage).
 -   **FR-009**: The system MUST provide an interface for users to view their past chat history.
 -   **FR-010**: The system MUST provide a mechanism for users to give feedback on the quality of chatbot responses.
+-   **FR-011**: The system MUST provide a mechanism for users to clear their entire chat history.
 
 ### Key Entities *(include if feature involves data)*
 
--   **User**: Represents an individual interacting with the chatbot. May be anonymous or have a persistent identifier.
+-   **User**: Represents a unique anonymous user session, identified by a client-side ID.
 -   **ChatSession**: Represents a single, continuous conversation between a user and the chatbot. Contains an ordered sequence of messages.
 -   **Message**: Represents a single entry in a chat session, either from the user (a query) or from the chatbot (a response).
 -   **DocumentChunk**: Represents a processed, indexed segment of the source textbook content used for retrieval.
