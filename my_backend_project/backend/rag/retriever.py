@@ -26,7 +26,7 @@ async def upsert_documents_to_qdrant(documents: List[Document], embeddings: List
     print(f"Upserted {len(documents)} documents to '{COLLECTION_NAME}'.")
 
 async def search_qdrant(query_vector: List[float], limit: int = 5) -> List[Dict[str, Any]]:
-    search_result = await qdrant_client.search(
+    search_result = await qdrant_client.search_points(
         collection_name=COLLECTION_NAME,
         query_vector=query_vector,
         limit=limit,

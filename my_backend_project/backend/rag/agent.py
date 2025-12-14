@@ -1,12 +1,10 @@
 import os
-from dotenv import load_dotenv
 import google.generativeai as genai
+from dotenv import load_dotenv
 from typing import List, Dict, Any
 
 load_dotenv()
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-
-
 
 model_rag = genai.GenerativeModel('gemini-2.0-flash')
 
@@ -42,7 +40,6 @@ async def check_relevance(question: str) -> bool:
 
 
 async def generate_rag_response(question: str, context_chunks: List[str], source_references: List[str]) -> Dict[str, Any]:
-    lang = await detect_language(question)
     lang = await detect_language(question)
 
     if not context_chunks:
@@ -80,7 +77,7 @@ async def generate_rag_response(question: str, context_chunks: List[str], source
         "You are a helpful assistant for a Humanoid Robotics textbook. Your primary goal is to answer questions strictly from the provided context from the book. "
         "If the answer is not found within the given context, clearly state 'Answer not found in the book.' Do not make up answers. "
         "Provide a concise summary first, and then elaborate with more detail in a separate 'detailed_answer' section, including specific citations to the provided sources (e.g., 'Source: chapter1.md'). "
-        f"Respond in {'Roman Urdu' if lang == 'ur' else 'English'}."
+        f"Respond in {{'Roman Urdu' if lang == 'ur' else 'English'}}."
     )
     user_message = f"Context from the book:\n{formatted_context}\n\nQuestion: {question}"
 
@@ -106,8 +103,14 @@ async def generate_rag_response(question: str, context_chunks: List[str], source
         }
     except Exception as e:
         print(f"Error generating LLM response: {e}")
+        # Graceful error message based on detected language
+        graceful_error_en = "I’m having trouble generating a response right now. Please try again."
+        graceful_error_ur = "Abhi jawab generate karne mein masla aa raha hai, thori dair baad dobara koshish karein."
+        
+        error_message = graceful_error_en if lang == "en" else graceful_error_ur
+
         return {
-            "answer": "An error occurred while generating the response. Please try again later.",
-            "detailed_answer": "An error occurred while generating the response. Please try again later.",
+            "answer": error_message,
+            "detailed_answer": error_message,
             "sources": []
         }
