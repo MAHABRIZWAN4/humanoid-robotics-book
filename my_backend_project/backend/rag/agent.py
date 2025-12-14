@@ -1,10 +1,10 @@
+from typing import List, Dict, Any
 from openai import OpenAI
-from my_website.src.api.config import OPENAI_API_KEY
-from typing import List, Optional, Dict
+from ..config import OPENAI_API_KEY
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-async def generate_response(question: str, context_chunks: List[str], source_references: List[str]) -> Dict[str, str]:
+async def generate_rag_response(question: str, context_chunks: List[str], source_references: List[str]) -> Dict[str, Any]:
     if not context_chunks:
         return {
             "answer": "Answer not found in the book. Please try rephrasing your question or selecting more relevant text.",
@@ -13,9 +13,9 @@ async def generate_response(question: str, context_chunks: List[str], source_ref
         }
 
     formatted_context = "\n\n".join(context_chunks)
-
+    
     # System rules: Answer ONLY from provided context. If answer not found -> say "Answer not found in the book".
-    # Emphasize concise summary for default, but provide detailed for expansion.
+    # Provide a concise summary first, and then elaborate with more detail in a separate 'detailed_answer' section, including specific citations.
     system_message = (
         "You are a helpful assistant for a Humanoid Robotics textbook. Your primary goal is to answer questions strictly from the provided context from the book. "
         "If the answer is not found within the given context, clearly state 'Answer not found in the book.' Do not make up answers. "
@@ -36,18 +36,15 @@ async def generate_response(question: str, context_chunks: List[str], source_ref
         )
         llm_full_response = response.choices[0].message.content.strip()
 
-        # Attempt to parse into concise and detailed parts
-        # This is a heuristic and might need fine-tuning with prompt engineering
+        # Attempt to parse into concise and detailed parts (heuristic)
         concise_answer = llm_full_response.split('\n\n')[0] # First paragraph as concise
         detailed_answer = llm_full_response
 
-        # Format sources for display
         unique_sources = list(set(source_references))
-        formatted_sources = ", ".join([s.split('/').pop() for s in unique_sources]) # Just filename for now
-
+        
         return {
             "answer": concise_answer,
-            "detailed_answer": detailed_answer + (f"\n\nSources: {formatted_sources}" if formatted_sources else ""),
+            "detailed_answer": detailed_answer,
             "sources": unique_sources
         }
     except Exception as e:

@@ -1,4 +1,4 @@
-/* my-website/src/theme/Chatbot/styles.module.css */
+/* my_website/Chatbot/styles.module.css */
 
 .floatingButton {
   position: fixed;
@@ -160,6 +160,35 @@
     background-color: #cc0000;
 }
 
+.selectedTextPrompt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f0f8ff;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.selectedTextPrompt p {
+    margin: 0;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selectedTextPrompt button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 10px;
+}
 
 .chatInputForm {
   display: flex;

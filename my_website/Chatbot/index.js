@@ -38,7 +38,7 @@ function Chatbot({ selectedTextFromPage }) {
     setInput('');
 
     try {
-      const response = await fetch('http://localhost:8000/query', { // Assuming FastAPI runs on 8000
+      const response = await fetch(`${process.env.BACKEND_API_URL}/query`, { // Assuming FastAPI runs on 8000
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,6 +115,7 @@ function Chatbot({ selectedTextFromPage }) {
       </div>
     );
   };
+
   return (
     <>
       <button className={styles.floatingButton} onClick={toggleChat}>

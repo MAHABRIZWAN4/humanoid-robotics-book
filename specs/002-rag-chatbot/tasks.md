@@ -1,4 +1,4 @@
-# Tasks: Integrated RAG Chatbot
+# Tasks: Integrated RAG Chatbot with Strict Frontend/Backend Separation
 
 **Input**: Design documents from `/specs/002-rag-chatbot/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories)
@@ -11,83 +11,68 @@
 
 ---
 
-## Phase 1: Setup (Shared Infrastructure)
+## Phase 1: Backend Setup (Railway Ready)
 
-**Purpose**: Initialize the backend API project.
+**Purpose**: Initialize the new backend project structure and dependencies.
 
-- [X] T001 Initialize FastAPI project structure in `my-website/src/api/`.
-
----
-
-## Phase 2: Foundational (Blocking Prerequisites)
-
-**Purpose**: Process the book content into a queryable knowledge base. This entire phase must be complete before any user story work can begin.
-
-- [X] T002 [P] Create a content processing script in `scripts/prepare_content.js`.
-- [X] T003 Implement logic in `scripts/prepare_content.js` to extract and clean content from all MD/MDX files in `my-website/docs/`.
-- [X] T004 Implement text chunking logic (500-1000 tokens) in `scripts/prepare_content.js`.
-- [X] T005 [P] Implement Cohere embedding generation for text chunks in `scripts/prepare_content.js`.
-- [X] T006 [P] Implement Qdrant connection and setup logic in `scripts/prepare_content.js` to create the collection.
-- [X] T007 Implement logic in `scripts/prepare_content.js` to insert the generated vectors and metadata into Qdrant.
-- [X] T008 Execute the `scripts/prepare_content.js` script to fully populate the vector database.
-
-**Checkpoint**: Foundation ready. The vector database is populated with the textbook's content.
+- [X] T001 Create `my_backend_project/` directory.
+- [X] T002 Create `my_backend_project/backend/` directory.
+- [X] T003 Create `my_backend_project/scripts/` directory.
+- [X] T004 Create `my_backend_project/backend/requirements.txt` and add core backend dependencies: `fastapi`, `uvicorn`, `cohere`, `qdrant-client`, `openai`, `psycopg2-binary`.
+- [X] T005 Initialize basic FastAPI app in `my_backend_project/backend/main.py` with `/health` endpoint.
+- [X] T006 Create `my_backend_project/backend/config.py` to load environment variables.
+- [X] T007 Create `my_backend_project/backend/schemas.py` for Pydantic models.
 
 ---
 
-## Phase 3: User Story 1 - Focused Question Answering (Priority: P1) 🎯 MVP
+## Phase 2: RAG Pipeline (within `my_backend_project/backend/rag/`)
 
-**Goal**: A user can select text and ask a question about it to get a concise, context-aware answer.
-**Independent Test**: Can be tested by selecting a paragraph, asking a question, and verifying a relevant summary answer is returned.
+**Purpose**: Implement the core RAG components for content processing, embedding, and retrieval.
 
-- [X] T009 [P] [US1] Create the `/query` endpoint in `my-website/src/api/main.py` to accept a question and optional selected text.
-- [X] T010 [US1] Implement Qdrant similarity search in the `/query` endpoint to retrieve relevant document chunks.
-- [X] T011 [US1] Create an LLM service module in `my-website/src/api/llm_service.py` for RAG orchestration.
-- [X] T012 [US1] Implement logic in `llm_service.py` to combine the user query with retrieved chunks and generate a concise summary answer.
-- [X] T013 [US1] Integrate the `llm_service.py` into the `/query` endpoint.
-- [X] T014 [P] [US1] Create the floating chat button and panel UI component in `my-website/src/theme/Chatbot/index.js`.
-- [X] T015 [P] [US1] Style the Chatbot UI using CSS in `my-website/src/theme/Chatbot/styles.module.css`.
-- [X] T016 [US1] Implement frontend logic to capture selected text from the document and pass it to the Chatbot component.
-- [X] T017 [US1] Implement the API call from the Chatbot component to the `/query` endpoint.
-- [X] T018 [US1] Implement logic in the Chatbot component to display the summary answer and a "Show more" button.
-
-**Checkpoint**: User Story 1 is fully functional. A user can get summary answers to questions about selected text.
+- [X] T008 Create `my_backend_project/backend/rag/` directory.
+- [X] T009 Create `my_backend_project/backend/rag/loader.py` for MD/MDX file reading and cleaning.
+- [X] T010 Create `my_backend_project/backend/rag/chunker.py` for text chunking logic.
+- [X] T011 Create `my_backend_project/backend/rag/embeddings.py` for Cohere embedding generation.
+- [X] T012 Create `my_backend_project/backend/rag/retriever.py` for Qdrant similarity search.
+- [X] T013 Create `my_backend_project/backend/rag/agent.py` for OpenAI Agent logic.
+- [X] T014 Create `my_backend_project/scripts/ingest_book.py` as a one-time script for embedding ingestion.
+- [X] T015 Implement content loading, cleaning, and chunking in `my_backend_project/scripts/ingest_book.py` using `my_website/docs/` as the source.
+- [X] T016 Implement embedding generation using `my_backend_project/backend/rag/embeddings.py` and Qdrant storage using `my_backend_project/backend/rag/retriever.py` within `my_backend_project/scripts/ingest_book.py`.
+- [X] T017 Execute `my_backend_project/scripts/ingest_book.py` to populate the Qdrant database.
 
 ---
 
-## Phase 4: User Story 2 - General Knowledge-Base Query (Priority: P2)
+## Phase 3: Backend FastAPI Endpoints (`my_backend_project/backend/main.py`)
 
-**Goal**: A user can ask a general question and get a cited, detailed answer.
-**Independent Test**: Ask a general question and click "Show more" to verify a correct, cited answer is returned.
+**Purpose**: Integrate RAG components into the main API endpoints.
 
-- [X] T019 [US2] Ensure the Chatbot UI in `my-website/src/theme/Chatbot/index.js` allows submitting questions when no text is selected.
-- [X] T020 [US2] Update the `llm_service.py` to include source citations (chapter/section) in the full, detailed response.
-- [X] T021 [US2] Update the Chatbot component to display the detailed answer and citations when "Show more" is clicked.
-
-**Checkpoint**: User Stories 1 & 2 are functional. The chatbot handles both contextual and general queries with detailed answers.
+- [X] T018 [US1] Implement `POST /query` endpoint in `my_backend_project/backend/main.py` to accept `question` and optional `selected_text`.
+- [X] T019 [US1] Integrate `my_backend_project/backend/rag/retriever.py` to get relevant chunks based on `selected_text` or `question`.
+- [X] T020 [US1] Integrate `my_backend_project/backend/rag/agent.py` to generate answers from retrieved context.
+- [X] T021 [US2] Ensure `POST /query` returns answer and metadata (chapter/section reference).
 
 ---
 
-## Phase 5: User Story 3 - Review Chat History (Priority: P3)
+## Phase 4: Frontend Chatbot (`my_website/Chatbot/`)
 
-**Goal**: A user can view their past conversations, which are persisted in the browser's local storage.
-**Independent Test**: Have a conversation, reload the page, and verify the conversation is still present in the chat history view.
+**Purpose**: Create and integrate the Chatbot UI within the existing Docusaurus site.
 
-- [X] T022 [P] [US3] Implement logic in `my-website/src/theme/Chatbot/index.js` to save the message history to local storage after each interaction.
-- [X] T023 [US3] Implement logic in the Chatbot component to load and restore chat history from local storage when it mounts.
-- [X] T024 [P] [US3] Create a "History" view or tab within the Chatbot component to display past conversations.
-
-**Checkpoint**: All user stories are now independently functional.
+- [X] T022 Create `my_website/Chatbot/index.js` for the React chatbot component.
+- [X] T023 Create `my_website/Chatbot/styles.module.css` for Chatbot UI styling.
+- [X] T024 [US1] Implement floating chat UI component.
+- [X] T025 [US1] Implement input box and message history view in the Chatbot UI.
+- [X] T026 [US1] Implement text selection capture and "Ask about this" feature.
+- [X] T027 [US3] Implement local storage to save and restore chat history.
+- [X] T028 Connect Chatbot to the Railway backend `/query` endpoint.
 
 ---
 
-## Phase 6: Polish & Cross-Cutting Concerns
+## Phase 5: Deployment & Finalization
 
-**Purpose**: Final improvements and production readiness.
+**Purpose**: Prepare and deploy the separated backend and frontend components.
 
-- [X] T025 [P] Add a user feedback mechanism (e.g., thumbs up/down) to the Chatbot UI in `my-website/src/theme/Chatbot/index.js`.
-- [X] T026 [P] Add a "Clear History" button to the UI in `my-website/src/theme/Chatbot/index.js`.
-- [X] T027 Perform functional testing for both general and selected-text queries.
-- [X] T028 [P] Measure response latency and perform basic performance testing.
-- [X] T029 Prepare all environment variables and secrets for Vercel deployment.
-- [X] T030 Deploy the updated Docusaurus site with the embedded chatbot and backend API to Vercel.
+- [X] T029 Ensure `requirements.txt` in `my_backend_project/backend/` is complete for Railway deployment.
+- [X] T030 Configure Docusaurus frontend for Vercel deployment, pointing API calls to the Railway backend URL.
+- [ ] T031 Perform comprehensive functional and integration testing.
+- [ ] T032 Deploy the backend to Railway.
+- [ ] T033 Deploy the Docusaurus site (with embedded chatbot) to Vercel.

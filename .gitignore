@@ -27,10 +27,3 @@ Thumbs.db
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-*.egg-info/
