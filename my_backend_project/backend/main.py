@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from my_backend_project.backend.schemas import QueryRequest, QueryResponse
-from my_backend_project.backend.config import cohere_client
-from my_backend_project.backend.rag.retriever import search_qdrant
-from my_backend_project.backend.rag.agent import generate_rag_response
+from .schemas import QueryRequest, QueryResponse
+from .config import cohere_client
+from .rag.retriever import search_qdrant
+from .rag.agent import generate_rag_response
 
 app = FastAPI()
 
@@ -31,32 +31,35 @@ def read_health():
 
 @app.post("/query", response_model=QueryResponse)
 async def query_chatbot(request: QueryRequest):
-    if not request.question:
-        raise HTTPException(status_code=400, detail="Question cannot be empty.")
+    try:
+        if not request.question:
+            raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
-    query_text = request.question
-    if request.selected_text:
-        query_text = f"{request.selected_text}\n\nQuestion: {request.question}"
+        query_text = request.question
+        if request.selected_text:
+            query_text = f"{request.selected_text}\n\nQuestion: {request.question}"
 
-    # Generate embedding for the query
-    query_embedding_response = await cohere_client.embed(
-        texts=[query_text],
-        model="embed-english-v3.0",
-        input_type="search_query"
-    )
-    query_embedding = query_embedding_response.embeddings[0]
+        # Generate embedding for the query
+        query_embedding_response = await cohere_client.embed(
+            texts=[query_text],
+            model="embed-english-v3.0",
+            input_type="search_query"
+        )
+        query_embedding = query_embedding_response.embeddings[0]
 
-    # Perform similarity search in Qdrant
-    retrieved_chunks = await search_qdrant(query_embedding)
-    
-    context_chunks = [chunk["text"] for chunk in retrieved_chunks]
-    source_references = [chunk["source"] for chunk in retrieved_chunks]
+        # Perform similarity search in Qdrant
+        retrieved_chunks = await search_qdrant(query_embedding)
+        
+        context_chunks = [chunk["text"] for chunk in retrieved_chunks]
+        source_references = [chunk["source"] for chunk in retrieved_chunks]
 
-    # Generate answer using LLM agent
-    llm_response = await generate_rag_response(request.question, context_chunks, source_references)
+        # Generate answer using LLM agent
+        llm_response = await generate_rag_response(request.question, context_chunks, source_references)
 
-    return QueryResponse(
-        answer=llm_response["answer"],
-        detailed_answer=llm_response["detailed_answer"],
-        source_references=llm_response["sources"]
-    )
+        return QueryResponse(
+            answer=llm_response["answer"],
+            detailed_answer=llm_response["detailed_answer"],
+            source_references=llm_response["sources"]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
