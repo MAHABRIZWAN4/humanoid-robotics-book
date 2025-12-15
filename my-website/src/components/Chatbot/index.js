@@ -38,7 +38,7 @@ function Chatbot({ selectedTextFromPage }) {
     setInput('');
 
     try {
-      const response = await fetch(`${process.env.BACKEND_API_URL}/query`, { // Assuming FastAPI runs on 8000
+      const response = await fetch(`${process.env.DOCUSAURUS_BACKEND_API_URL}/query`, { // Assuming FastAPI runs on 8000
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

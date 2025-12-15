@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 from qdrant_client.http.models import Distance, VectorParams
+from qdrant_client.http import models
 from ..config import qdrant_client, COLLECTION_NAME
 from .loader import Document
 
@@ -26,10 +27,15 @@ async def upsert_documents_to_qdrant(documents: List[Document], embeddings: List
     print(f"Upserted {len(documents)} documents to '{COLLECTION_NAME}'.")
 
 async def search_qdrant(query_vector: List[float], limit: int = 5) -> List[Dict[str, Any]]:
-    search_result = await qdrant_client.search_points(
+    # Corrected the search call to use the proper async method `qdrant_client.search`
+    search_result = await qdrant_client.search(
         collection_name=COLLECTION_NAME,
         query_vector=query_vector,
         limit=limit,
-        append_payload=True,
+        with_payload=True,
     )
-    return [{"text": hit.payload["text"], "source": hit.payload["source"]} for hit in search_result]
+
+    return [
+        {"text": hit.payload["text"], "source": hit.payload.get("source", "unknown")}
+        for hit in search_result
+    ]
