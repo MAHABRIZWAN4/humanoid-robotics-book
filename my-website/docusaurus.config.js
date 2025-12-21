@@ -12,7 +12,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'Physical AI & Humanoid Robotics',
   tagline: 'An Open-Source Textbook for a New Era of Robotics',
-  url: 'http://localhost:3000',
+  url: 'https://humanoid-robotics-book-lovat.vercel.app/',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
