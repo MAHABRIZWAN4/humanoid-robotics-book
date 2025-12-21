@@ -3,6 +3,8 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
+      // Import Chatbot
+import Chatbot from '../components/Chatbot'; // Path correct hai kyunki Chatbot folder sibling me hai
 
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
@@ -37,6 +39,8 @@ export default function Home() {
       <main>
         <HomepageFeatures />
       </main>
+ {/* Chatbot Integration */}
+      <Chatbot selectedTextFromPage="" />  {/* Agar aap dynamic selected text handle karna chahte ho to yahan pass karenge */}
     </Layout>
   );
 }

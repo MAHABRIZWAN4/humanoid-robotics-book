@@ -1,3 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
 # Node.js/JavaScript/TypeScript
 node_modules/
 dist/

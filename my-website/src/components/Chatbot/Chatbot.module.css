@@ -1,0 +1,168 @@
+/*
+ * Chatbot.module.css
+ * Styles for the Chatbot component
+ */
+
+ .chatWindow {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 420px; /* Slightly wider */
+    height: 600px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    font-size: 16px; /* Increase base font size */
+  }
+  
+  .chatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px; /* Increase padding */
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .chatHeader h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .chatMessages {
+    flex-grow: 1;
+    padding: 15px; /* Increase padding */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Increase gap */
+  }
+  
+  .message {
+    padding: 10px 15px; /* Increase padding */
+    border-radius: 20px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.5; /* Improve line spacing */
+  }
+  
+  .user {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    font-size: 0.95rem; /* Increase user font size */
+  }
+  
+  .bot {
+    background-color: #e9ecef; /* Lighter gray for bot */
+    color: black;
+    align-self: flex-start;
+  }
+
+  .bot p:first-child {
+    font-weight: normal; /* Make the main answer normal weight */
+    margin: 0;
+  }
+  
+  .chatInputForm {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background-color: #f5f5f5;
+  }
+  
+  .chatInputForm input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 12px 15px;
+    margin-right: 10px;
+    font-size: 1rem;
+  }
+  
+  .chatInputForm button {
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .chatInputForm button:disabled {
+    background-color: #a0a0a0;
+  }
+
+  .loadingIndicator {
+    display: flex;
+    justify-content: flex-start; /* Align with bot messages */
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .loadingIndicator span {
+    font-style: italic;
+    color: #888;
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 20px;
+  }
+
+  .fallbackLabel {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #555;
+    background-color: #d6eaff;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-top: 8px;
+    display: inline-block;
+  }
+
+  .detailedAnswer {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #dcdcdc;
+    font-size: 0.9rem;
+    white-space: pre-wrap; /* Preserve formatting */
+  }
+
+  .sources {
+    margin-top: 15px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .sources strong {
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .sources ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .errorMessage {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+  }

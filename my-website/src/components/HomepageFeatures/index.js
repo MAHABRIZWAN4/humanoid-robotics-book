@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
+
+
 const FeatureList = [
   {
     title: 'The Robotic Nervous System (ROS 2)',
@@ -69,6 +71,9 @@ export default function HomepageFeatures() {
           ))}
         </div>
       </div>
+
+       
+
     </section>
   );
 }

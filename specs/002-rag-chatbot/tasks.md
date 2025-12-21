@@ -73,6 +73,7 @@
 
 - [X] T029 Ensure `requirements.txt` in `my_backend_project/backend/` is complete for Railway deployment.
 - [X] T030 Configure Docusaurus frontend for Vercel deployment, pointing API calls to the Railway backend URL.
-- [ ] T031 Perform comprehensive functional and integration testing.
+- [X] T031 Perform comprehensive functional and integration testing.
 - [ ] T032 Deploy the backend to Railway.
 - [ ] T033 Deploy the Docusaurus site (with embedded chatbot) to Vercel.
+- [X] T034 [US1] Replace Gemini LLM with OpenRouter to resolve runtime errors.
