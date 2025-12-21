@@ -1,0 +1,15 @@
+{
+  "builds": [
+    {
+      "src": "my-website/api/my_backend_project/index.py",
+      "use": "@vercel/python",
+      "config": { "runtime": "python3.10" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/my_backend_project/(.*)",
+      "dest": "my-website/api/my_backend_project/index.py"
+    }
+  ]
+}

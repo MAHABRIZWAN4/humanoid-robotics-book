@@ -68,7 +68,7 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-      const response = await fetch('http://127.0.0.1:8000/query', {
+      const response = await fetch('/api/my_backend_project/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
