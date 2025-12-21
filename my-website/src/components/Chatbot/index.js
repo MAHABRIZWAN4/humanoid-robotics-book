@@ -68,7 +68,8 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-      const response = await fetch('/api/my_backend_project/query', {
+      const railwayBackendUrl = process.env.REACT_APP_RAILWAY_BACKEND_URL || '/api/my_backend_project/query';
+      const response = await fetch(`${railwayBackendUrl}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
