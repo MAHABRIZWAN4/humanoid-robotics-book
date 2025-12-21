@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from cohere import AsyncClient as CohereClient
-from qdrant_client import AsyncQdrantClient as QdrantClient # Use AsyncQdrantClient for async operations
+from cohere import Client as CohereClient
+from qdrant_client import QdrantClient # Use QdrantClient for sync operations
 
 load_dotenv()
 
@@ -12,6 +12,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 cohere_client = CohereClient(api_key=COHERE_API_KEY)
 
+# Use AsyncQdrantClient for async operations
 qdrant_client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY,

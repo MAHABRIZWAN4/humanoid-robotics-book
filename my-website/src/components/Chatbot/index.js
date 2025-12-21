@@ -1,164 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './Chatbot.module.css'; // Using the new CSS module
 
-const CHAT_HISTORY_KEY = 'chatbot_history';
+// BotMessage component to render messages from the assistant
+const BotMessage = ({ message }) => {
+  // Check if the response is a RAG-only fallback
+  const isFallback = message.text.includes("Could not generate a summary");
 
-function Chatbot({ selectedTextFromPage }) {
-  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className={`${styles.message} ${styles.bot}`}>
+      {/* If it's not a fallback, show the primary answer. If it is, hide the redundant text. */}
+      {!isFallback && <p>{message.text}</p>}
+      
+      {isFallback && (
+        <span className={styles.fallbackLabel}>
+          📘 Answered from textbook content
+        </span>
+      )}
+      
+      {/* The detailed answer should always be shown if it exists */}
+      {message.detailed_answer && (
+        <div className={styles.detailedAnswer}>
+          {message.detailed_answer}
+        </div>
+      )}
+
+      {message.source_references && message.source_references.length > 0 && (
+        <div className={styles.sources}>
+          <strong>Sources:</strong>
+          <ul>
+            {message.source_references.map((src, index) => (
+              <li key={index}>{src}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+function Chatbot() {
+  const [isOpen, setIsOpen] = useState(true); // Default to open for easier debugging
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [currentSelectedText, setCurrentSelectedText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const messagesEndRef = useRef(null);
 
-  // Load messages from local storage on component mount
-  useEffect(() => {
-    const storedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    }
-  }, []);
-
-  // Save messages to local storage whenever messages state changes
-  useEffect(() => {
-    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
-  }, [messages]);
-
-  useEffect(() => {
-    setCurrentSelectedText(selectedTextFromPage);
-  }, [selectedTextFromPage]);
-
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
+  // Effect to scroll to the latest message
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const sendMessage = async (question, selectedText = null) => {
-    if (!question.trim()) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
 
-    const userMessage = { id: messages.length + 1, text: question, sender: 'user' };
+  // Main function to handle sending a message to the backend
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = { text: input, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch(`${process.env.DOCUSAURUS_BACKEND_API_URL}/query`, { // Assuming FastAPI runs on 8000
+      // API call to the FastAPI backend
+      const response = await fetch('http://127.0.0.1:8000/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: question, selected_text: selectedText }),
+        body: JSON.stringify({ question: input, selected_text: "" }),
       });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.statusText}`);
+      }
+
       const data = await response.json();
-      const botMessage = { 
-        id: messages.length + 2, 
-        text: data.answer, 
-        detailed_text: data.detailed_answer, // Store detailed answer
-        sender: 'bot', 
-        source_references: data.source_references 
+
+      // Construct the bot message from the response
+      const botMessage = {
+        text: data.answer,
+        detailed_answer: data.detailed_answer,
+        sender: 'bot',
+        source_references: data.source_references,
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      const errorMessage = { id: messages.length + 2, text: 'Error: Could not connect to the chatbot. Please try again later.', sender: 'bot' };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+
+    } catch (err) {
+      console.error('Failed to send message:', err);
+      setError('Failed to get a response. Please check your connection or try again later.');
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    sendMessage(input);
-  };
-
-  const handleAskAboutSelectedText = () => {
-    if (currentSelectedText.trim()) {
-      sendMessage("Explain this:", currentSelectedText);
-      setCurrentSelectedText(''); // Clear selected text after sending
-    }
-  };
-
-  const handleClearHistory = () => {
-    setMessages([]);
-    localStorage.removeItem(CHAT_HISTORY_KEY);
-  };
-
-  const BotMessage = ({ msg }) => {
-    const [showFullAnswer, setShowFullAnswer] = useState(false);
-
-    const toggleFullAnswer = () => setShowFullAnswer(!showFullAnswer);
-
-    const handleFeedback = (feedback) => {
-        console.log(`Feedback for message ${msg.id}: ${feedback}`);
-        // Here you would typically send this feedback to a backend API
-    };
-
-    return (
-      <div className={`${styles.message} ${styles[msg.sender]}`}>
-        <p>{showFullAnswer && msg.detailed_text ? msg.detailed_text : msg.text}</p>
-        {msg.detailed_text && msg.detailed_text.length > msg.text.length && (
-          <button className={styles.showMoreButton} onClick={toggleFullAnswer}>
-            {showFullAnswer ? 'Show Less' : 'Show More'}
-          </button>
-        )}
-        {msg.source_references && msg.source_references.length > 0 && showFullAnswer && ( // Only show sources with full answer
-          <div className={styles.sourceReferences}>
-            <strong>Sources:</strong>
-            <ul>
-              {msg.source_references.map((src, index) => (
-                <li key={index}>{src}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {msg.sender === 'bot' && (
-            <div className={styles.feedbackButtons}>
-                <button className={styles.feedbackButton} onClick={() => handleFeedback('upvote')}>👍</button>
-                <button className={styles.feedbackButton} onClick={() => handleFeedback('downvote')}>👎</button>
-            </div>
-        )}
-      </div>
-    );
   };
 
   return (
     <>
-      <button className={styles.floatingButton} onClick={toggleChat}>
-        {isOpen ? 'X' : 'Chat'}
-      </button>
-
-      {isOpen && (
-        <div className={styles.chatWindow}>
-          <div className={styles.chatHeader}>
-            <h3>AI Chatbot</h3>
-            <div>
-              <button onClick={handleClearHistory} className={styles.clearHistoryButton}>Clear History</button>
-              <button onClick={toggleChat}>X</button>
-            </div>
-          </div>
-          <div className={styles.chatMessages}>
-            {messages.map((msg) => (
-              msg.sender === 'bot' ? (
-                <BotMessage key={msg.id} msg={msg} />
-              ) : (
-                <div key={msg.id} className={`${styles.message} ${styles[msg.sender]}`}>
-                  <p>{msg.text}</p>
-                </div>
-              )
-            ))}
-          </div>
-          {currentSelectedText && (
-            <div className={styles.selectedTextPrompt}>
-              <p>Selected: "{currentSelectedText.substring(0, 50)}..."</p>
-              <button onClick={handleAskAboutSelectedText}>Ask about this</button>
+      {/* The chatbot is now embedded directly and is always open */}
+      <div className={styles.chatWindow}>
+        <div className={styles.chatHeader}>
+          <h3>Humanoid Robotics Expert</h3>
+        </div>
+        <div className={styles.chatMessages}>
+          {messages.map((msg, index) =>
+            msg.sender === 'user' ? (
+              <div key={index} className={`${styles.message} ${styles.user}`}>
+                <p>{msg.text}</p>
+              </div>
+            ) : (
+              <BotMessage key={index} message={msg} />
+            )
+          )}
+          {isLoading && (
+            <div className={styles.loadingIndicator}>
+              <span>Thinking...</span>
             </div>
           )}
-          <form onSubmit={handleSendMessage} className={styles.chatInputForm}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question about the book..."
-            />
-            <button type="submit">Send</button>
-          </form>
+          {error && <div className={styles.errorMessage}>{error}</div>}
+          <div ref={messagesEndRef} />
         </div>
-      )}
+        <form onSubmit={handleSendMessage} className={styles.chatInputForm}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a question..."
+            disabled={isLoading}
+          />
+          <button type="submit" disabled={isLoading}>
+            Send
+          </button>
+        </form>
+      </div>
     </>
   );
 }
