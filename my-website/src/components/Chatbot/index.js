@@ -70,9 +70,10 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-      const backendUrl = typeof window !== "undefined"
-        ? process.env.REACT_APP_RAILWAY_BACKEND_URL || "https://humanoid-robotics-book-production-dfba.up.railway.app"
-        : "https://humanoid-robotics-book-production-dfba.up.railway.app"; // Keep the functional URL here for SSR
+      const backendUrl =
+        typeof window !== "undefined"
+          ? import.meta.env.VITE_RAILWAY_BACKEND_URL || "https://humanoid-robotics-book-production-dfba.up.railway.app"
+          : "https://humanoid-robotics-book-production-dfba.up.railway.app"; // SSR fallback
       console.log("Backend URL:", backendUrl); // Log backend URL
 
       const requestBody = JSON.stringify({ question: input, selected_text: "" });
