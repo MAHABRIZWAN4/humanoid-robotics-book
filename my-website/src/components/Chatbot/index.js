@@ -62,8 +62,6 @@ function Chatbot() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    console.log("User input:", input); // Log user input
-
     const userMessage = { text: input, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
@@ -72,27 +70,21 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-      console.log("Backend URL:", backendUrl); // Log backend URL
-
       const requestBody = JSON.stringify({ question: input, selected_text: "" });
-      console.log("Fetch request body:", requestBody); // Log fetch request body
 
       const response = await fetch(`${backendUrl}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: requestBody, // Use the stored requestBody
+        body: requestBody,
       });
-
-      console.log("Raw fetch response:", response); // Log raw response
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log("Parsed response:", data); // Log parsed response
 
       // Construct the bot message from the response
       const botMessage = {
@@ -104,7 +96,7 @@ function Chatbot() {
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
     } catch (err) {
-      console.error('Chatbot error:', err); // Log full error with context
+      console.error('Chatbot error:', err);
       setError('Failed to get a response. Please check your connection or try again later.');
     } finally {
       setIsLoading(false);
