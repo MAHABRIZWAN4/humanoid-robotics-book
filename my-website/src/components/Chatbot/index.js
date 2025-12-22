@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'; // Import the hook
 import styles from './Chatbot.module.css'; // Using the new CSS module
 
 // BotMessage component to render messages from the assistant
@@ -40,8 +39,7 @@ const BotMessage = ({ message }) => {
 };
 
 function Chatbot() {
-  const { siteConfig } = useDocusaurusContext(); // Get site config
-  const { backendUrl } = siteConfig.customFields; // Destructure backendUrl
+  const backendUrl = "https://humanoid-robotics-book-production-dfba.up.railway.app"; // Hardcoded for debugging
 
   const [isOpen, setIsOpen] = useState(true); // Default to open for easier debugging
   const [messages, setMessages] = useState([]);

@@ -15,12 +15,6 @@ const config = {
   url: 'https://humanoid-robotics-book-lovat.vercel.app/',
   favicon: 'img/favicon.ico',
 
-  // Add custom fields here
-  customFields: {
-    // Make the backend URL available to the client-side
-    backendUrl: process.env.DOCUSAURUS_RAILWAY_BACKEND_URL || 'https://humanoid-robotics-book-production-dfba.up.railway.app',
-  },
-
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
