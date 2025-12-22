@@ -60,6 +60,8 @@ function Chatbot() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    console.log("User input:", input); // Log user input
+
     const userMessage = { text: input, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
@@ -68,22 +70,30 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-            const backendUrl = typeof window !== "undefined"
+      const backendUrl = typeof window !== "undefined"
         ? process.env.REACT_APP_RAILWAY_BACKEND_URL || "https://humanoid-robotics-book-production-dfba.up.railway.app"
-        : "https://humanoid-robotics-book-production-dfba.up.railway.app";
+        : "https://humanoid-robotics-book-production-dfba.up.railway.app"; // Keep the functional URL here for SSR
+      console.log("Backend URL:", backendUrl); // Log backend URL
+
+      const requestBody = JSON.stringify({ question: input, selected_text: "" });
+      console.log("Fetch request body:", requestBody); // Log fetch request body
+
       const response = await fetch(`${backendUrl}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: input, selected_text: "" }),
+        body: requestBody, // Use the stored requestBody
       });
+
+      console.log("Raw fetch response:", response); // Log raw response
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log("Parsed response:", data); // Log parsed response
 
       // Construct the bot message from the response
       const botMessage = {
@@ -95,7 +105,7 @@ function Chatbot() {
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
     } catch (err) {
-      console.error('Failed to send message:', err);
+      console.error('Chatbot error:', err); // Log full error with context
       setError('Failed to get a response. Please check your connection or try again later.');
     } finally {
       setIsLoading(false);
