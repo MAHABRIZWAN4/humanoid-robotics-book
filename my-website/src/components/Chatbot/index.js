@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'; // Import the hook
 import styles from './Chatbot.module.css'; // Using the new CSS module
 
 // BotMessage component to render messages from the assistant
@@ -39,6 +40,9 @@ const BotMessage = ({ message }) => {
 };
 
 function Chatbot() {
+  const { siteConfig } = useDocusaurusContext(); // Get site config
+  const { backendUrl } = siteConfig.customFields; // Destructure backendUrl
+
   const [isOpen, setIsOpen] = useState(true); // Default to open for easier debugging
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -70,10 +74,6 @@ function Chatbot() {
 
     try {
       // API call to the FastAPI backend
-      const backendUrl =
-        typeof window !== "undefined"
-          ? import.meta.env.VITE_RAILWAY_BACKEND_URL || "https://humanoid-robotics-book-production-dfba.up.railway.app"
-          : "https://humanoid-robotics-book-production-dfba.up.railway.app"; // SSR fallback
       console.log("Backend URL:", backendUrl); // Log backend URL
 
       const requestBody = JSON.stringify({ question: input, selected_text: "" });
