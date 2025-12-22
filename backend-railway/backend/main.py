@@ -9,8 +9,8 @@ app = FastAPI()
 
 # Add CORS middleware to allow requests from the Docusaurus frontend
 origins = [
-    "https://humanoid-robotics-book-lovat.vercel.app/", # Docusaurus development server
-    # Add your Vercel deployment URL here in production
+    "http://localhost:3000",  # Docusaurus local development server
+    "https://humanoid-robotics-book-lovat.vercel.app",  # Vercel deployment URL
 ]
 
 app.add_middleware(
