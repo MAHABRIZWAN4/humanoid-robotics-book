@@ -1,0 +1,37 @@
+.subtitleAnimator {
+  display: inline-block; /* Adjust as needed */
+  font-size: 1.5rem; /* Match hero__subtitle font size */
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-medium); /* Inherit color */
+  margin-bottom: 2rem; /* Match hero__subtitle margin */
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflow */
+}
+
+.subtitleAnimator span { /* Apply styles to the span containing the text */
+  display: inline-block; /* Needed for transforms */
+}
+
+/* Typing effect styles */
+.subtitleAnimator .typing {
+  border-right: none; /* Hide cursor while typing */
+}
+
+.cursor {
+  display: inline-block;
+  background-color: var(--ifm-color-primary);
+  animation: blink 0.75s step-end infinite; /* Cursor blink */
+  margin-left: 2px; /* Small space between text and cursor */
+}
+
+@keyframes blink {
+  from, to { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .subtitleAnimator {
+    font-size: 1.2rem;
+  }
+}

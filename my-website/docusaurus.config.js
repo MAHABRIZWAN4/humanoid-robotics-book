@@ -73,8 +73,10 @@ const config = {
       navbar: {
         title: 'Physical AI & Humanoid Robotics',
         logo: {
-          alt: 'Thinking Robot Logo',
-          src: 'img/thinking-robot.svg',
+          alt: 'Book Logo',
+          src: 'img/book_logo.png',
+          href: '/',
+          className: 'navbar__logo',
         },
         items: [
           {
@@ -85,8 +87,13 @@ const config = {
           },
 
           {
-            href: 'https://github.com/humanoid-robotics-book/humanoid-robotics-book',
+            href: 'https://github.com/MAHABRIZWAN4',
             label: 'GitHub',
+            position: 'right',
+          },
+          {
+            href: 'https://www.linkedin.com/in/mahab-rizwan-831095341/',
+            label: 'LinkedIn',
             position: 'right',
           },
         ],
@@ -99,7 +106,7 @@ const config = {
             items: [
               {
                 label: 'TextBook',
-                to: '/docs/intro',
+                to: '/', // Link to project homepage
               },
             ],
           },
@@ -125,7 +132,11 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/humanoid-robotics-book/humanoid-robotics-book',
+                href: 'https://github.com/MAHABRIZWAN4', // Updated GitHub link
+              },
+              {
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/in/mahab-rizwan-831095341/', // Added LinkedIn link
               },
             ],
           },

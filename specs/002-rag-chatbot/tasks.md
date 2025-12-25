@@ -1,7 +1,7 @@
-# Tasks: Integrated RAG Chatbot with Strict Frontend/Backend Separation
+# Tasks: Integrated RAG Chatbot UI/UX Enhancements
 
-**Input**: Design documents from `/specs/002-rag-chatbot/`
-**Prerequisites**: plan.md (required), spec.md (required for user stories)
+**Input**: User request for UI/UX upgrade
+**Prerequisites**: Existing Docusaurus project (my-website/) with RAG Chatbot integrated.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -11,69 +11,48 @@
 
 ---
 
-## Phase 1: Backend Setup (Railway Ready)
+## Phase 1: Environment Setup & Initial UI Scan
 
-**Purpose**: Initialize the new backend project structure and dependencies.
+- [X] T001 Verify Docusaurus project setup and identify key frontend files for modification (config, theme, components, CSS).
+- [X] T002 Install any necessary frontend libraries for animations (e.g., Framer Motion if not already present and compatible with Docusaurus, otherwise use pure CSS/JS).
 
-- [X] T001 Create `my_backend_project/` directory.
-- [X] T002 Create `my_backend_project/backend/` directory.
-- [X] T003 Create `my_backend_project/scripts/` directory.
-- [X] T004 Create `my_backend_project/backend/requirements.txt` and add core backend dependencies: `fastapi`, `uvicorn`, `cohere`, `qdrant-client`, `openai`, `psycopg2-binary`.
-- [X] T005 Initialize basic FastAPI app in `my_backend_project/backend/main.py` with `/health` endpoint.
-- [X] T006 Create `my_backend_project/backend/config.py` to load environment variables.
-- [X] T007 Create `my_backend_project/backend/schemas.py` for Pydantic models.
+## Phase 2: Navbar Enhancements
 
----
+- [X] T003 Locate the Navbar configuration/component.
+- [X] T004 Replace existing "GitHub" link with user's GitHub profile (https://github.com/MAHABRIZWAN4).
+- [X] T005 Add a new "LinkedIn" link (https://www.linkedin.com/in/mahab-rizwan-831095341/) next to GitHub.
+- [X] T006 Apply professional styling and hover animations to both GitHub and LinkedIn links.
 
-## Phase 2: RAG Pipeline (within `my_backend_project/backend/rag/`)
+## Phase 3: Module Images Enhancement
 
-**Purpose**: Implement the core RAG components for content processing, embedding, and retrieval.
+- [X] T007 Locate the component rendering the 4 module images on the Home Page.
+- [X] T008 Identify/create high-quality, professional, modern, and relevant placeholder images for each module.
+- [X] T009 Implement subtle hover animations (lift, slight scale) for the module images.
+- [X] T010 Implement smooth fade-in on scroll animations for the module images.
 
-- [X] T008 Create `my_backend_project/backend/rag/` directory.
-- [X] T009 Create `my_backend_project/backend/rag/loader.py` for MD/MDX file reading and cleaning.
-- [X] T010 Create `my_backend_project/backend/rag/chunker.py` for text chunking logic.
-- [X] T011 Create `my_backend_project/backend/rag/embeddings.py` for Cohere embedding generation.
-- [X] T012 Create `my_backend_project/backend/rag/retriever.py` for Qdrant similarity search.
-- [X] T013 Create `my_backend_project/backend/rag/agent.py` for Gemini Agent logic with Guardrails and Multilingual Response.
-- [X] T014 Create `my_backend_project/scripts/ingest_book.py` as a one-time script for embedding ingestion.
-- [X] T015 Implement content loading, cleaning, and chunking in `my_backend_project/scripts/ingest_book.py` using `my_website/docs/` as the source.
-- [X] T016 Implement embedding generation using `my_backend_project/backend/rag/embeddings.py` and Qdrant storage using `my_backend_project/backend/rag/retriever.py` within `my_backend_project/scripts/ingest_book.py`.
-- [X] T017 Execute `my_backend_project/scripts/ingest_book.py` to populate the Qdrant database.
+## Phase 4: Footer Links Update
 
----
+- [X] T011 Locate the Footer configuration/component.
+- [X] T012 Replace "TextBook" link with the project's Homepage link.
+- [X] T013 Replace "GitHub" link with user's GitHub profile (https://github.com/MAHABRIZWAN4).
+- [X] T014 Add a new "LinkedIn" link (https://www.linkedin.com/in/mahab-rizwan-831095341/).
+- [X] T015 Apply professional styling and hover effects; ensure responsiveness.
 
-## Phase 3: Backend FastAPI Endpoints (`my_backend_project/backend/main.py`)
+## Phase 5: Main Hero Section Animation & Styling
 
-**Purpose**: Integrate RAG components into the main API endpoints.
+- [X] T016 Locate the Main Hero Heading component ("Physical AI & Humanoid Robotics").
+- [X] T017 Apply strong professional headline styling (modern typography, spacing).
+- [X] T018 Locate the Subheading component ("An Open-Source Textbook for a New Era of Robotics").
+- [X] T019 Implement streaming/rotating text animation for the subheading with smooth transitions between sentences.
 
-- [X] T018 [US1] Implement `POST /query` endpoint in `my_backend_project/backend/main.py` to accept `question` and optional `selected_text`.
-- [X] T019 [US1] Integrate `my_backend_project/backend/rag/retriever.py` to get relevant chunks based on `selected_text` or `question`.
-- [X] T020 [US1] Integrate `my_backend_project/backend/rag/agent.py` to generate answers from retrieved context.
-- [X] T021 [US2] Ensure `POST /query` returns answer and metadata (chapter/section reference).
+## Phase 6: "Start Reading" Button Upgrade
 
----
+- [X] T020 Locate the "Start Reading" button component.
+- [X] T021 Enhance visual prominence (soft glow or gradient).
+- [X] T022 Add hover animation and smooth transition.
 
-## Phase 4: Frontend Chatbot (`my_website/Chatbot/`)
+## Phase 7: Responsiveness & Final Review
 
-**Purpose**: Create and integrate the Chatbot UI within the existing Docusaurus site.
-
-- [X] T022 Create `my_website/Chatbot/index.js` for the React chatbot component.
-- [X] T023 Create `my_website/Chatbot/styles.module.css` for Chatbot UI styling.
-- [X] T024 [US1] Implement floating chat UI component.
-- [X] T025 [US1] Implement input box and message history view in the Chatbot UI.
-- [X] T026 [US1] Implement text selection capture and "Ask about this" feature.
-- [X] T027 [US3] Implement local storage to save and restore chat history.
-- [X] T028 Connect Chatbot to the Railway backend `/query` endpoint.
-
----
-
-## Phase 5: Deployment & Finalization
-
-**Purpose**: Prepare and deploy the separated backend and frontend components.
-
-- [X] T029 Ensure `requirements.txt` in `my_backend_project/backend/` is complete for Railway deployment.
-- [X] T030 Configure Docusaurus frontend for Vercel deployment, pointing API calls to the Railway backend URL.
-- [X] T031 Perform comprehensive functional and integration testing.
-- [X] T032 Prepare the backend for Railway deployment (moved out of monorepo).
-- [X] T033 Deploy the Docusaurus site (with embedded chatbot) to Vercel (updated to point to external Railway backend).
-- [X] T034 [US1] Replace Gemini LLM with OpenRouter to resolve runtime errors.
+- [X] T023 Review all changes for pixel-perfect responsiveness across mobile, tablet, laptop, and large screens.
+- [X] T024 Ensure no text overflow and images scale correctly.
+- [X] T025 Final verification that all constraints are met (no backend/env changes, modern, animated, professional UI).

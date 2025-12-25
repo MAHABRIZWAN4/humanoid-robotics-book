@@ -1,29 +1,38 @@
 import clsx from 'clsx';
+import Heading from '@theme/Heading';
+import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-      // Import Chatbot
-import Chatbot from '../components/Chatbot'; // Path correct hai kyunki Chatbot folder sibling me hai
 
-import Heading from '@theme/Heading';
+import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import Chatbot from '../components/Chatbot'; // Path correct hai kyunki Chatbot folder sibling me hai
+import HeroSubtitleAnimator from '../components/HeroSubtitleAnimator'; // Import the new subtitle animator component
+
 import styles from './index.module.css';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+  const subtitleSentences = [
+    siteConfig.tagline, // "An Open-Source Textbook for a New Era of Robotics"
+    "Explore Physical AI and Humanoid Robotics",
+    "Build the Future of Robotics"
+  ];
+
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <Heading as="h1" className="hero__title">
           {siteConfig.title}
         </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        {/* Replaced static tagline paragraph with animated component */}
+        <HeroSubtitleAnimator sentences={subtitleSentences} />
         <div className={styles.buttons}>
-                      <Link
-                        className="button button--secondary button--lg"
-                        to="/docs/TextBook/Module-1/Chapter-1">
-                        Start Reading →
-                      </Link>        </div>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/TextBook/Module-1/Chapter-1">
+            Start Reading →
+          </Link>
+        </div>
       </div>
     </header>
   );
