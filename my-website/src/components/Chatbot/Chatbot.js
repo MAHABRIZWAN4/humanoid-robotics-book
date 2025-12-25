@@ -3,6 +3,8 @@ import ChatbotButton from './ChatbotButton';
 import ChatbotModal from './ChatbotModal';
 import styles from './Chatbot.module.css';
 
+const GREETINGS = ["hi", "hello", "salam", "assalamu alaikum", "how are you"];
+
 function Chatbot() {
   const backendUrl = "https://humanoid-robotics-book-production-dfba.up.railway.app";
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +39,18 @@ function Chatbot() {
 
     const userMessage = { text: input, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+    const lowerCaseInput = input.toLowerCase().trim();
+
+    if (GREETINGS.includes(lowerCaseInput)) {
+      const greetingMessage = {
+        sender: 'bot',
+        isGreeting: true,
+      };
+      setMessages((prevMessages) => [...prevMessages, greetingMessage]);
+      setInput('');
+      return;
+    }
+
     setInput('');
     setIsLoading(true);
     setError(null);
@@ -54,29 +68,16 @@ function Chatbot() {
         throw new Error(`API Error: ${response.statusText}`);
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let botMessage = { text: '', sender: 'bot' };
-      let firstChunk = true;
+      const data = await response.json();
+      const botMessage = {
+        text: data.answer,
+        detailed_answer: data.detailed_answer,
+        source_references: data.source_references,
+        sender: 'bot',
+      };
 
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
 
-        const chunk = decoder.decode(value, { stream: true });
-        botMessage.text += chunk;
-
-        if (firstChunk) {
-          setMessages((prevMessages) => [...prevMessages, botMessage]);
-          firstChunk = false;
-        } else {
-          setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-            newMessages[newMessages.length - 1] = botMessage;
-            return newMessages;
-          });
-        }
-      }
     } catch (err) {
       console.error('Chatbot error:', err);
       setError('Failed to get a response. Please check your connection or try again later.');
