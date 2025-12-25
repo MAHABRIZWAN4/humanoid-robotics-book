@@ -1,3 +1,4 @@
+/* Chatbot container remains fixed */
 .chatbotContainer {
   position: fixed;
   bottom: 20px;
@@ -5,30 +6,30 @@
   z-index: 1000;
 }
 
+/* Chatbot button */
 .chatbotButton {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  box-shadow: none; /* Removed box-shadow to ensure no background effect */
-  transition: transform 0.3s ease; /* Adjusted transition as box-shadow is removed */
+  box-shadow: none;
+  transition: transform 0.3s ease;
 }
 
 .chatbotButton img {
-  width: 100px; /* Increased size significantly */
-  height: 100px; /* Increased size significantly */
-  /* Removed border-radius: 50%; to make it non-round */
+  width: 100px;
+  height: 100px;
 }
 
 .chatbotButton:hover {
   transform: scale(1.1);
-  /* Removed box-shadow hover effect */
 }
 
+/* Chat Window - LIGHT MODE */
 .chatWindow {
   width: 400px;
-  height: 600px; /* Keep height for larger chat area */
-  max-height: calc(100vh - 100px); /* Ensure it doesn't overlap too much on small screens, keeping space from top/bottom */
+  height: 600px;
+  max-height: calc(100vh - 100px);
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -36,7 +37,7 @@
   flex-direction: column;
   overflow: hidden;
   position: fixed;
-  bottom: 20px; /* Moved down to align with button and prevent message hiding */
+  bottom: 20px;
   right: 20px;
 }
 
@@ -79,11 +80,13 @@
 .user {
   background-color: #dcf8c6;
   align-self: flex-end;
+  color: #000;
 }
 
 .bot {
   background-color: #f1f1f1;
   align-self: flex-start;
+  color: #000;
 }
 
 .chatInputForm {
@@ -98,6 +101,8 @@
   border-radius: 5px;
   padding: 10px;
   margin-right: 10px;
+  background-color: #fff;
+  color: #000;
 }
 
 .chatInputForm button {
@@ -123,4 +128,44 @@
 .errorMessage {
   color: red;
   padding: 10px;
+}
+
+/* -----------------------------
+   DARK MODE OVERRIDES
+----------------------------- */
+[data-theme='dark'] .chatWindow {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #333;
+}
+
+[data-theme='dark'] .chatHeader {
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #444;
+  color: #f0f0f0;
+}
+
+[data-theme='dark'] .user {
+  background-color: #3a3f4b;
+  color: #f0f0f0;
+}
+
+[data-theme='dark'] .bot {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+}
+
+[data-theme='dark'] .chatInputForm input {
+  background-color: #3a3a3a;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+[data-theme='dark'] .chatInputForm button {
+  background-color: #25c2a0;
+  color: #fff;
+}
+
+[data-theme='dark'] .closeButton {
+  color: #f0f0f0;
 }

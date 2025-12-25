@@ -22,6 +22,9 @@
 /* ===============================
    Dark Mode Overrides
 ================================ */
+/* ===============================
+   Dark Mode Overrides
+================================ */
 [data-theme='dark'] {
   --ifm-color-primary: #25c2a0;
   --ifm-color-primary-dark: #21af90;
